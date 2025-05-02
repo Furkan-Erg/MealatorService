@@ -12,6 +12,9 @@ import com.furkanerguldurenler.dto.ShoppingListDto;
 import com.furkanerguldurenler.dto.UserDto;
 import com.furkanerguldurenler.entities.ShoppingList;
 import com.furkanerguldurenler.entities.User;
+import com.furkanerguldurenler.exception.BaseException;
+import com.furkanerguldurenler.exception.ErrorMessage;
+import com.furkanerguldurenler.exception.MessageType;
 import com.furkanerguldurenler.repository.UserRepository;
 import com.furkanerguldurenler.services.IUserService;
 
@@ -38,8 +41,8 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public UserDto findUserById(Integer id) {
 		Optional<User> user = userRepository.findById(id);
-		if (user.get() == null) {
-			return null;
+		if (user.isEmpty()) {
+			throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST,id.toString()));
 		}
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user.get(), userDto);
