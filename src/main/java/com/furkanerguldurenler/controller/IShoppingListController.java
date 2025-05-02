@@ -1,10 +1,11 @@
 package com.furkanerguldurenler.controller;
 
 import com.furkanerguldurenler.dto.AddIngredientsRequestDto;
+import com.furkanerguldurenler.entities.RootEntity;
 
 public interface IShoppingListController {
 
-	public void addIngredients(AddIngredientsRequestDto addIngredientsRequestDto);
-	
-	public void removeIngredientById(Integer userId,Integer ingredientId);
+    public RootEntity<String> addIngredients(AddIngredientsRequestDto addIngredientsRequestDto);
+
+    public RootEntity<String> removeIngredientById(Integer userId, Integer ingredientId);
 }

@@ -46,7 +46,7 @@ public class UserServiceImpl implements IUserService {
 		}
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user.get(), userDto);
-		return userDto;
+		return userDto; 
 	}
 
 	@Override

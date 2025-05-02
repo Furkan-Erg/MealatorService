@@ -14,39 +14,41 @@ import org.springframework.web.bind.annotation.RestController;
 import com.furkanerguldurenler.controller.IUserController;
 import com.furkanerguldurenler.dto.ShoppingListDto;
 import com.furkanerguldurenler.dto.UserDto;
+import com.furkanerguldurenler.entities.RootEntity;
 import com.furkanerguldurenler.services.IUserService;
 
 @RestController
 @RequestMapping("/rest/api/user")
-public class UserControllerImpl implements IUserController {
+public class UserControllerImpl extends RestBaseController implements IUserController {
 
-	@Autowired
-	private IUserService userService;
+    @Autowired
+    private IUserService userService;
 
-	@GetMapping("/list")
-	@Override
-	public List<UserDto> getAllUsers() {
-		return userService.getAllUsers();
-	}
+    @GetMapping("/list")
+    @Override
+    public RootEntity<List<UserDto>> getAllUsers() {
 
-	@GetMapping("/{id}")
-	@Override
-	public UserDto findUserById(@PathVariable Integer id) {
-		return userService.findUserById(id);
-	}
+        return ok(userService.getAllUsers());
+    }
 
-	@PostMapping("/add")
-	@Override
-	public void addUser(@RequestBody UserDto user) {
-		userService.addUser(user);
+    @GetMapping("/{id}")
+    @Override
+    public RootEntity<UserDto> findUserById(@PathVariable Integer id) {
+        return ok(userService.findUserById(id));
+    }
 
-	}
+    @PostMapping("/add")
+    @Override
+    public void addUser(@RequestBody UserDto user) {
+        userService.addUser(user);
 
-	@GetMapping("/shoppinglist")
-	@Override
-	public ShoppingListDto getShoppingListByUserId(@RequestParam Integer userId) {
-		return userService.getShoppingListByUserId(userId);
+    }
 
-	}
+    @GetMapping("/shoppinglist")
+    @Override
+    public RootEntity<ShoppingListDto> getShoppingListByUserId(@RequestParam Integer userId) {
+        return ok(userService.getShoppingListByUserId(userId));
+
+    }
 
 }

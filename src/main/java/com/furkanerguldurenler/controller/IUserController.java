@@ -4,14 +4,15 @@ import java.util.List;
 
 import com.furkanerguldurenler.dto.ShoppingListDto;
 import com.furkanerguldurenler.dto.UserDto;
+import com.furkanerguldurenler.entities.RootEntity;
 
 public interface IUserController {
 
-	public List<UserDto> getAllUsers();
+    public RootEntity<List<UserDto>> getAllUsers();
 
-	public UserDto findUserById(Integer id);
+    public RootEntity<UserDto> findUserById(Integer id);
 
-	public void addUser(UserDto user);
+    public void addUser(UserDto user);
 
-	public ShoppingListDto getShoppingListByUserId(Integer userId);
+    public RootEntity<ShoppingListDto> getShoppingListByUserId(Integer userId);
 }

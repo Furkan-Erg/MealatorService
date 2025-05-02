@@ -2,6 +2,7 @@ package com.furkanerguldurenler.controller.impl;
 
 import java.util.List;
 
+import com.furkanerguldurenler.entities.RootEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,23 +16,23 @@ import com.furkanerguldurenler.services.IIngredientService;
 
 @RestController
 @RequestMapping("/rest/api/ingredient")
-public class IngredientControllerImpl implements IIngredientController {
+public class IngredientControllerImpl extends RestBaseController implements IIngredientController {
 
-	@Autowired
-	private IIngredientService ingredientService;
+    @Autowired
+    private IIngredientService ingredientService;
 
-	@PostMapping(path = "/add")
-	@Override
-	public void addIngredient(@RequestBody IngredientDto ingredient) {
-		ingredientService.addIngredient(ingredient);
+    @PostMapping(path = "/add")
+    @Override
+    public RootEntity<String> addIngredient(@RequestBody IngredientDto ingredient) {
+        ingredientService.addIngredient(ingredient);
+        return success();
+    }
 
-	}
+    @GetMapping(path = "/list")
+    @Override
+    public RootEntity<List<IngredientDto>> getAllIngredients() {
+        return ok(ingredientService.getAllIngredients());
 
-	@GetMapping(path = "/list")
-	@Override
-	public List<IngredientDto> getAllIngredients() {
-		return ingredientService.getAllIngredients();
-
-	}
+    }
 
 }
