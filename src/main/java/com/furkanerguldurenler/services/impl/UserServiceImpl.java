@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,27 +54,24 @@ public class UserServiceImpl implements IUserService {
         return userDto;
     }
 
-    @Override
-    public void addUser(UserDto user) {
-        User tempUser = new User();
-        tempUser.setName(user.getName());
-        tempUser.setSurname(user.getSurname());
-        ShoppingList shoppingList = new ShoppingList();
-        shoppingList.setName("shopping list");
-        tempUser.setShoppingList(shoppingList);
-
-        userRepository.save(tempUser);
-    }
 
     @Override
     public ShoppingListDto getShoppingListByUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if (user.get() == null) {
-            return null;
+        if (user.isEmpty()) {
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, userId.toString()));
         }
         ShoppingListDto shoppingListDto = new ShoppingListDto();
         BeanUtils.copyProperties(user.get().getShoppingList(), shoppingListDto);
         return shoppingListDto;
+    }
+
+    @Override
+    public UserDto getUserInfo(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        UserDto dto = new UserDto();
+        BeanUtils.copyProperties(user, dto);
+        return dto;
     }
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.furkanerguldurenler.dto.ShoppingListDto;
 import com.furkanerguldurenler.dto.UserDto;
 import com.furkanerguldurenler.entities.RootEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface IUserController {
 
@@ -12,7 +13,7 @@ public interface IUserController {
 
     public RootEntity<UserDto> findUserById(Integer id);
 
-    public void addUser(UserDto user);
-
     public RootEntity<ShoppingListDto> getShoppingListByUserId(Integer userId);
+
+    public RootEntity<UserDto> getUserInfo(UserDetails userDetails);
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.furkanerguldurenler.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,18 +38,18 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
         return ok(userService.findUserById(Long.valueOf(id)));
     }
 
-    @PostMapping("/add")
-    @Override
-    public void addUser(@RequestBody UserDto user) {
-        userService.addUser(user);
-
-    }
-
     @GetMapping("/shoppinglist")
     @Override
     public RootEntity<ShoppingListDto> getShoppingListByUserId(@RequestParam Integer userId) {
         return ok(userService.getShoppingListByUserId(Long.valueOf(userId)));
 
+    }
+
+    @GetMapping("/info")
+    @Override
+    public RootEntity<UserDto> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        return ok(userService.getUserInfo(username));
     }
 
 

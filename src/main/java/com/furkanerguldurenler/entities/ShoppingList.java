@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,20 +20,21 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "shopping_list")
 public class ShoppingList {
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Column(name = "name", nullable = false)
-	private String name = "shopping list";
+    @Column(name = "name", nullable = false)
+    private String name = "shopping list";
 
-	@OneToOne(mappedBy = "shoppingList")
-	private User user;
+    @OneToOne(mappedBy = "shoppingList")
+    private User user;
 
-	@ManyToMany
-	private List<Ingredient> ingredient = new ArrayList<>();
+    @ManyToMany
+    private List<Ingredient> ingredient = new ArrayList<>();
 
 }

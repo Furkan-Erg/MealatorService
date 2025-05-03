@@ -3,6 +3,7 @@ package com.furkanerguldurenler.services.impl;
 import com.furkanerguldurenler.dto.LoginDto;
 import com.furkanerguldurenler.dto.RegisterDto;
 import com.furkanerguldurenler.dto.RegisterResponse;
+import com.furkanerguldurenler.entities.ShoppingList;
 import com.furkanerguldurenler.entities.User;
 import com.furkanerguldurenler.enums.Role;
 import com.furkanerguldurenler.repository.UserRepository;
@@ -12,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class AuthService implements IAuthService {
@@ -28,9 +31,12 @@ public class AuthService implements IAuthService {
     public RegisterResponse register(RegisterDto registerDto) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
+
+        ShoppingList shoppingList = ShoppingList.builder().name("shoppingList").ingredient(new ArrayList<>()).build();
+
         User user = User.builder().username(registerDto.getUsername())
                 .password(encodedPassword).name(registerDto.getName()).surname(registerDto.getSurname())
-                .role(Role.USER).build();
+                .role(Role.USER).shoppingList(shoppingList).build();
         userRepository.save(user);
 
         var token = jwtService.generateToken(user);

@@ -1,8 +1,10 @@
 package com.furkanerguldurenler.services;
 
-import java.util.List;
+import com.furkanerguldurenler.dto.ShoppingListDto;
+import com.furkanerguldurenler.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.furkanerguldurenler.dto.*;
+import java.util.List;
 
 public interface IUserService {
 
@@ -10,9 +12,9 @@ public interface IUserService {
 
     public UserDto findUserById(Long id);
 
-    public void addUser(UserDto user);
 
     public ShoppingListDto getShoppingListByUserId(Long userId);
 
 
+    public UserDto getUserInfo(String username);
 }
