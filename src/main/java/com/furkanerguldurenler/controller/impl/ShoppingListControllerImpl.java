@@ -29,7 +29,7 @@ public class ShoppingListControllerImpl extends RestBaseController implements IS
 
     @DeleteMapping("/users/{userId}/shoppinglist/ingredients/{ingredientId}")
     @Override
-    public RootEntity<String> removeIngredientById(@PathVariable Integer userId, @PathVariable Integer ingredientId) {
+    public RootEntity<String> removeIngredientById(@PathVariable Long userId, @PathVariable Integer ingredientId) {
         shoppingListService.removeIngredientById(userId, ingredientId);
         return success();
     }

@@ -17,42 +17,42 @@ import com.furkanerguldurenler.services.IShoppingListService;
 @Service
 public class ShoppingListService implements IShoppingListService {
 
-	@Autowired
-	private ShoppingListRepository shoppingListRepository;
+    @Autowired
+    private ShoppingListRepository shoppingListRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private IngredientRepository ingredientRepository;
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
-	@Override
-	public void addIngredients(AddIngredientsRequestDto addIngredientsRequestDto) {
-		Integer userId = addIngredientsRequestDto.getUserId();
-		List<Integer> ingredientIds = addIngredientsRequestDto.getIngredientIds();
+    @Override
+    public void addIngredients(AddIngredientsRequestDto addIngredientsRequestDto) {
+        long userId = addIngredientsRequestDto.getUserId();
+        List<Integer> ingredientIds = addIngredientsRequestDto.getIngredientIds();
 
-		User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
 
-		ShoppingList shoppingList = user.getShoppingList();
+        ShoppingList shoppingList = user.getShoppingList();
 
-		List<Ingredient> ingredients = ingredientRepository.findAllById(ingredientIds);
+        List<Ingredient> ingredients = ingredientRepository.findAllById(ingredientIds);
 
-		shoppingList.getIngredient().addAll(ingredients);
+        shoppingList.getIngredient().addAll(ingredients);
 
-		shoppingListRepository.save(shoppingList);
-	}
+        shoppingListRepository.save(shoppingList);
+    }
 
-	@Override
-	public void removeIngredientById(Integer userId, Integer ingredientId) {
+    @Override
+    public void removeIngredientById(Long userId, Integer ingredientId) {
 
-		User user = userRepository.findById(userId).orElseThrow();
-		ShoppingList shoppingList = user.getShoppingList();
+        User user = userRepository.findById(userId).orElseThrow();
+        ShoppingList shoppingList = user.getShoppingList();
 
-		Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow();
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow();
 
-		shoppingList.getIngredient().remove(ingredient);
+        shoppingList.getIngredient().remove(ingredient);
 
-		shoppingListRepository.save(shoppingList);
-	}
+        shoppingListRepository.save(shoppingList);
+    }
 
 }

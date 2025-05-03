@@ -2,6 +2,7 @@ package com.furkanerguldurenler.controller.impl;
 
 import java.util.List;
 
+import com.furkanerguldurenler.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.furkanerguldurenler.controller.IUserController;
-import com.furkanerguldurenler.dto.ShoppingListDto;
-import com.furkanerguldurenler.dto.UserDto;
 import com.furkanerguldurenler.entities.RootEntity;
 import com.furkanerguldurenler.services.IUserService;
 
@@ -34,7 +33,7 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
     @GetMapping("/{id}")
     @Override
     public RootEntity<UserDto> findUserById(@PathVariable Integer id) {
-        return ok(userService.findUserById(id));
+        return ok(userService.findUserById(Long.valueOf(id)));
     }
 
     @PostMapping("/add")
@@ -47,8 +46,19 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
     @GetMapping("/shoppinglist")
     @Override
     public RootEntity<ShoppingListDto> getShoppingListByUserId(@RequestParam Integer userId) {
-        return ok(userService.getShoppingListByUserId(userId));
+        return ok(userService.getShoppingListByUserId(Long.valueOf(userId)));
 
+    }
+
+    @PostMapping("/register")
+    public RootEntity<RegisterResponse> register(@RequestBody RegisterDto registerDto) {
+        return ok(userService.register(registerDto));
+    }
+
+
+    @PostMapping("/login")
+    public RootEntity<RegisterResponse> login(@RequestBody LoginDto loginDto) {
+        return ok(userService.login(loginDto));
     }
 
 }

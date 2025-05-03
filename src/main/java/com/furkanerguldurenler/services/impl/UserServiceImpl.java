@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.furkanerguldurenler.dto.*;
+import com.furkanerguldurenler.enums.Role;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.furkanerguldurenler.dto.ShoppingListDto;
-import com.furkanerguldurenler.dto.UserDto;
 import com.furkanerguldurenler.entities.ShoppingList;
 import com.furkanerguldurenler.entities.User;
 import com.furkanerguldurenler.exception.BaseException;
@@ -21,55 +24,82 @@ import com.furkanerguldurenler.services.IUserService;
 @Service
 public class UserServiceImpl implements IUserService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Override
-	public List<UserDto> getAllUsers() {
-		List<User> userList = userRepository.findAll();
-		List<UserDto> userListDto = new ArrayList<>();
+    @Autowired
+    private JwtService jwtService;
 
-		for (User user : userList) {
-			UserDto tempUser = new UserDto();
-			BeanUtils.copyProperties(user, tempUser);
-			userListDto.add(tempUser);
-		}
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-		return userListDto;
-	}
+    @Override
+    public List<UserDto> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+        List<UserDto> userListDto = new ArrayList<>();
 
-	@Override
-	public UserDto findUserById(Integer id) {
-		Optional<User> user = userRepository.findById(id);
-		if (user.isEmpty()) {
-			throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST,id.toString()));
-		}
-		UserDto userDto = new UserDto();
-		BeanUtils.copyProperties(user.get(), userDto);
-		return userDto; 
-	}
+        for (User user : userList) {
+            UserDto tempUser = new UserDto();
+            BeanUtils.copyProperties(user, tempUser);
+            userListDto.add(tempUser);
+        }
 
-	@Override
-	public void addUser(UserDto user) {
-		User tempUser = new User();
-		tempUser.setName(user.getName());
-		tempUser.setSurname(user.getSurname());
-		ShoppingList shoppingList = new ShoppingList();
-		shoppingList.setName("shopping list");
-		tempUser.setShoppingList(shoppingList);
+        return userListDto;
+    }
 
-		userRepository.save(tempUser);
-	}
+    @Override
+    public UserDto findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, id.toString()));
+        }
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user.get(), userDto);
+        return userDto;
+    }
 
-	@Override
-	public ShoppingListDto getShoppingListByUserId(Integer userId) {
-		Optional<User> user = userRepository.findById(userId);
-		if (user.get() == null) {
-			return null;
-		}
-		ShoppingListDto shoppingListDto = new ShoppingListDto();
-		BeanUtils.copyProperties(user.get().getShoppingList(), shoppingListDto);
-		return shoppingListDto;
-	}
+    @Override
+    public void addUser(UserDto user) {
+        User tempUser = new User();
+        tempUser.setName(user.getName());
+        tempUser.setSurname(user.getSurname());
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setName("shopping list");
+        tempUser.setShoppingList(shoppingList);
+
+        userRepository.save(tempUser);
+    }
+
+    @Override
+    public ShoppingListDto getShoppingListByUserId(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.get() == null) {
+            return null;
+        }
+        ShoppingListDto shoppingListDto = new ShoppingListDto();
+        BeanUtils.copyProperties(user.get().getShoppingList(), shoppingListDto);
+        return shoppingListDto;
+    }
+
+    @Override
+    public RegisterResponse register(RegisterDto registerDto) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
+        User user = User.builder().username(registerDto.getUsername())
+                .password(encodedPassword).name(registerDto.getName()).surname(registerDto.getSurname())
+                .role(Role.USER).build();
+        userRepository.save(user);
+
+        var token = jwtService.generateToken(user);
+        return RegisterResponse.builder().token(token).build();
+    }
+
+    @Override
+    public RegisterResponse login(LoginDto loginDto) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+        User user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
+        String token = jwtService.generateToken(user);
+        return RegisterResponse.builder().token(token).build();
+    }
 
 }

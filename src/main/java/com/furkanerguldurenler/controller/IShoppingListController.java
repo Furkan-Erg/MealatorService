@@ -7,5 +7,5 @@ public interface IShoppingListController {
 
     public RootEntity<String> addIngredients(AddIngredientsRequestDto addIngredientsRequestDto);
 
-    public RootEntity<String> removeIngredientById(Integer userId, Integer ingredientId);
+    public RootEntity<String> removeIngredientById(Long userId, Integer ingredientId);
 }

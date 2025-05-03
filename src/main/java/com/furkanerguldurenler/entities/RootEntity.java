@@ -14,17 +14,14 @@ public class RootEntity<T> {
     private T data;
 
     public static <T> RootEntity<T> ok(T data) {
-        RootEntity<T> rootEntity = new RootEntity<>(true, null, data);
-        return rootEntity;
+        return new RootEntity<>(true, null, data);
     }
 
     public static <T> RootEntity<T> error(String errorMessage) {
-        RootEntity<T> rootEntity = new RootEntity<>(false, errorMessage, null);
-        return rootEntity;
+        return new RootEntity<>(false, errorMessage, null);
     }
 
     public static RootEntity<String> success() {
-        RootEntity<String> rootEntity = new RootEntity<>(true, null, "operation was completed successfully");
-        return rootEntity;
+        return new RootEntity<>(true, null, "operation was completed successfully");
     }
 }
