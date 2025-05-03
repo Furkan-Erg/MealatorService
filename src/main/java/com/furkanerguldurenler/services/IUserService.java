@@ -14,7 +14,5 @@ public interface IUserService {
 
     public ShoppingListDto getShoppingListByUserId(Long userId);
 
-    public RegisterResponse register(RegisterDto registerDto);
 
-    public RegisterResponse login(LoginDto loginDto);
 }

@@ -27,12 +27,6 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Override
     public List<UserDto> getAllUsers() {
         List<User> userList = userRepository.findAll();
@@ -81,25 +75,5 @@ public class UserServiceImpl implements IUserService {
         return shoppingListDto;
     }
 
-    @Override
-    public RegisterResponse register(RegisterDto registerDto) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
-        User user = User.builder().username(registerDto.getUsername())
-                .password(encodedPassword).name(registerDto.getName()).surname(registerDto.getSurname())
-                .role(Role.USER).build();
-        userRepository.save(user);
-
-        var token = jwtService.generateToken(user);
-        return RegisterResponse.builder().token(token).build();
-    }
-
-    @Override
-    public RegisterResponse login(LoginDto loginDto) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-        User user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
-        String token = jwtService.generateToken(user);
-        return RegisterResponse.builder().token(token).build();
-    }
 
 }

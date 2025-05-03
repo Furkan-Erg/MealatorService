@@ -50,15 +50,5 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
 
     }
 
-    @PostMapping("/register")
-    public RootEntity<RegisterResponse> register(@RequestBody RegisterDto registerDto) {
-        return ok(userService.register(registerDto));
-    }
-
-
-    @PostMapping("/login")
-    public RootEntity<RegisterResponse> login(@RequestBody LoginDto loginDto) {
-        return ok(userService.login(loginDto));
-    }
 
 }
