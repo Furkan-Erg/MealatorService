@@ -36,7 +36,9 @@ public class UserServiceImpl implements IUserService {
 
         for (User user : userList) {
             UserDto tempUser = new UserDto();
-            BeanUtils.copyProperties(user, tempUser);
+            tempUser.setId(user.getId());
+            tempUser.setName(user.getName());
+            tempUser.setSurname(user.getSurname());
             userListDto.add(tempUser);
         }
 
@@ -52,18 +54,6 @@ public class UserServiceImpl implements IUserService {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user.get(), userDto);
         return userDto;
-    }
-
-
-    @Override
-    public ShoppingListDto getShoppingListByUserId(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, userId.toString()));
-        }
-        ShoppingListDto shoppingListDto = new ShoppingListDto();
-        BeanUtils.copyProperties(user.get().getShoppingList(), shoppingListDto);
-        return shoppingListDto;
     }
 
     @Override

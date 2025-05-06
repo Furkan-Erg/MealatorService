@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,19 +20,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ingredient")
-public class Ingredient {
+@Builder
+@Table(name = "favorite_list")
+public class FavoriteList {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @OneToOne(mappedBy = "favoriteList")
+    private User user;
 
-    @ManyToMany(mappedBy = "ingredient")
-    private List<ShoppingList> shoppingList = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "ingredient")
+    @ManyToMany
     private List<Meal> meal = new ArrayList<>();
+
 }

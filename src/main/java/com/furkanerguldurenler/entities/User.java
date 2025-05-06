@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     private ShoppingList shoppingList;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private FavoriteList favoriteList;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

@@ -1,13 +1,11 @@
 package com.furkanerguldurenler.controller.impl;
 
+import com.furkanerguldurenler.dto.ShoppingListDto;
 import com.furkanerguldurenler.entities.RootEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import com.furkanerguldurenler.controller.IShoppingListController;
 import com.furkanerguldurenler.dto.AddIngredientsRequestDto;
@@ -22,16 +20,22 @@ public class ShoppingListControllerImpl extends RestBaseController implements IS
 
     @PostMapping("/addingredients")
     @Override
-    public RootEntity<String> addIngredients(@RequestBody AddIngredientsRequestDto addIngredientsRequestDto) {
-        shoppingListService.addIngredients(addIngredientsRequestDto);
+    public RootEntity<String> addIngredients(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AddIngredientsRequestDto addIngredientsRequestDto) {
+        shoppingListService.addIngredients(userDetails, addIngredientsRequestDto);
         return success();
     }
 
-    @DeleteMapping("/users/{userId}/shoppinglist/ingredients/{ingredientId}")
+    @DeleteMapping("/ingredients/delete/{ingredientId}")
     @Override
-    public RootEntity<String> removeIngredientById(@PathVariable Long userId, @PathVariable Integer ingredientId) {
-        shoppingListService.removeIngredientById(userId, ingredientId);
+    public RootEntity<String> removeIngredientById(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Integer ingredientId) {
+        shoppingListService.removeIngredientById(userDetails, ingredientId);
         return success();
+    }
+
+    @GetMapping("/list")
+    @Override
+    public RootEntity<ShoppingListDto> getShoppingList(@AuthenticationPrincipal UserDetails userDetails) {
+        return ok(shoppingListService.getShoppingList(userDetails));
     }
 
 }

@@ -13,8 +13,5 @@ public interface IUserService {
     public UserDto findUserById(Long id);
 
 
-    public ShoppingListDto getShoppingListByUserId(Long userId);
-
-
     public UserDto getUserInfo(String username);
 }

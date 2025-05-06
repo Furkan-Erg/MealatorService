@@ -13,7 +13,6 @@ public interface IUserController {
 
     public RootEntity<UserDto> findUserById(Integer id);
 
-    public RootEntity<ShoppingListDto> getShoppingListByUserId(Integer userId);
 
     public RootEntity<UserDto> getUserInfo(UserDetails userDetails);
 }

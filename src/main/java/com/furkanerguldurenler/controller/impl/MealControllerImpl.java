@@ -1,9 +1,13 @@
 package com.furkanerguldurenler.controller.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.furkanerguldurenler.dto.AddMealRequestDto;
 import com.furkanerguldurenler.entities.RootEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +29,9 @@ public class MealControllerImpl extends RestBaseController implements IMealContr
 
     @PostMapping(path = "/add")
     @Override
-    public RootEntity<MealDto> saveMeal(@RequestBody MealDto meal) {
-        return ok(mealService.saveMeal(meal));
+    public RootEntity<String> saveMeal(@RequestBody AddMealRequestDto meal) {
+        mealService.saveMeal(meal);
+        return success();
     }
 
     @GetMapping(path = "/list")
@@ -46,6 +51,19 @@ public class MealControllerImpl extends RestBaseController implements IMealContr
     public RootEntity<String> deleteMealById(@PathVariable Integer id) {
         mealService.deleteMealById(id);
         return success();
+    }
+
+    @PostMapping("/favorite/{id}")
+    @Override
+    public RootEntity<String> toggleFavoriteMeal(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Integer id) {
+        mealService.toggleFavoriteMeal(userDetails, id);
+        return success();
+    }
+
+    @GetMapping("/favorite/list")
+    @Override
+    public RootEntity<List<MealDto>> getFavoriteList(@AuthenticationPrincipal UserDetails userDetails) {
+        return ok(mealService.getFavoriteList(userDetails));
     }
 
 }

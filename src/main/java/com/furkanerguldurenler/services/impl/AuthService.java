@@ -3,6 +3,7 @@ package com.furkanerguldurenler.services.impl;
 import com.furkanerguldurenler.dto.LoginDto;
 import com.furkanerguldurenler.dto.RegisterDto;
 import com.furkanerguldurenler.dto.RegisterResponse;
+import com.furkanerguldurenler.entities.FavoriteList;
 import com.furkanerguldurenler.entities.ShoppingList;
 import com.furkanerguldurenler.entities.User;
 import com.furkanerguldurenler.enums.Role;
@@ -33,10 +34,10 @@ public class AuthService implements IAuthService {
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
 
         ShoppingList shoppingList = ShoppingList.builder().name("shoppingList").ingredient(new ArrayList<>()).build();
-
+        FavoriteList favoriteList = FavoriteList.builder().meal(new ArrayList<>()).build();
         User user = User.builder().username(registerDto.getUsername())
                 .password(encodedPassword).name(registerDto.getName()).surname(registerDto.getSurname())
-                .role(Role.USER).shoppingList(shoppingList).build();
+                .role(Role.USER).shoppingList(shoppingList).favoriteList(favoriteList).build();
         userRepository.save(user);
 
         var token = jwtService.generateToken(user);

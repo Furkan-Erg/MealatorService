@@ -1,15 +1,17 @@
 package com.furkanerguldurenler.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddIngredientsRequestDto {
+public class AddMealRequestDto {
+    private String name;
+    private String description;
     private List<Integer> ingredientIds;
 
 }

@@ -28,7 +28,6 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
     @GetMapping("/list")
     @Override
     public RootEntity<List<UserDto>> getAllUsers() {
-
         return ok(userService.getAllUsers());
     }
 
@@ -36,13 +35,6 @@ public class UserControllerImpl extends RestBaseController implements IUserContr
     @Override
     public RootEntity<UserDto> findUserById(@PathVariable Integer id) {
         return ok(userService.findUserById(Long.valueOf(id)));
-    }
-
-    @GetMapping("/shoppinglist")
-    @Override
-    public RootEntity<ShoppingListDto> getShoppingListByUserId(@RequestParam Integer userId) {
-        return ok(userService.getShoppingListByUserId(Long.valueOf(userId)));
-
     }
 
     @GetMapping("/info")
